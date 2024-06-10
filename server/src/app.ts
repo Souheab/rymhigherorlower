@@ -1,10 +1,12 @@
 import express from 'express';
 import { Collection, MongoClient } from 'mongodb';
+import cors from 'cors';
 import dotenv from 'dotenv';
 const app = express();
 const port = 3084;
 
 dotenv.config();
+app.use(cors());
 
 const url = process.env.MONGODB_URL || 'mongodb://localhost:27017';
 const client = new MongoClient(url);
@@ -68,7 +70,7 @@ app.get('/randomalbumpair', async (req, res) => {
       return res.status(500).send('Error fetching albums');
     }
 
-    res.json({ firstAlbum, secondAlbum });
+    res.json([ firstAlbum, secondAlbum ]);
   } catch (err) {
     console.error(err);
     res.status(500).send(`Error fetching albums: ${err}`);

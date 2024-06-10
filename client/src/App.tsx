@@ -7,7 +7,11 @@ function App() {
   const [isGameStarted, setIsGameStarted] = useState(false);
 
   return isGameStarted ? (
-    <GamePage />
+    <GamePage
+      onGameEnd={(score) => {
+        setIsGameStarted(false);
+      }}
+    />
   ) : (
     <StartPage onStart={() => setIsGameStarted(true)} />
   );
