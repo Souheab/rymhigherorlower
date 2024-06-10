@@ -4,7 +4,9 @@ import AlbumSelectButton from "./AlbumSelectButton";
 import Album from "../data/Album";
 import AlbumInfo from "./AlbumInfo";
 interface GamePageProps {
-  onGameEnd: (score: number) => void;
+  onGameEnd: () => void;
+  score: number;
+  onScoreChange: (score: number) => void;
 }
 
 export default function GamePage(props: GamePageProps) {
@@ -12,7 +14,6 @@ export default function GamePage(props: GamePageProps) {
   const [secondAlbum, setSecondAlbum] = useState(
     undefined as Album | undefined,
   );
-  const [score, setScore] = useState(0);
 
   useEffect(() => {
     fetchAlbumPair()
@@ -24,37 +25,36 @@ export default function GamePage(props: GamePageProps) {
       .catch((error) => {
         console.error("Error fetching albums: ", error);
       });
-  }, [score]);
+  }, [props.score]);
 
   return (
     <div className="flex flex-col h-screen items-center">
-      <div className="text-4xl mt-8">Score: {score}</div>
+      <div className="text-4xl mt-8">Score: {props.score}</div>
       <div className="mt-[15%]">
         <div>
-          Click on the album you think is rated higher on rateyourmusic.com?
+          Click on the album you think is rated higher on rateyourmusic.com
         </div>
         <div className="grid grid-cols-2 gap-16 justify-self-center mt-8">
-          <AlbumSelectButton album={firstAlbum}
+          <AlbumSelectButton
+            album={firstAlbum}
             onClick={() => {
               if (firstAlbum && secondAlbum) {
                 if (firstAlbum.score >= secondAlbum.score) {
-                  setScore(score + 1);
+                  props.onScoreChange(props.score + 1);
                 } else {
-                  props.onGameEnd(score);
-                  setScore(0);
+                  props.onGameEnd();
                 }
               }
             }}
           />
-          <AlbumSelectButton album={secondAlbum}
+          <AlbumSelectButton
+            album={secondAlbum}
             onClick={() => {
               if (firstAlbum && secondAlbum) {
                 if (secondAlbum.score >= firstAlbum.score) {
-                  setScore(score + 1);
-                }
-                else {
-                  props.onGameEnd(score);
-                  setScore(0);
+                  props.onScoreChange(props.score + 1);
+                } else {
+                  props.onGameEnd();
                 }
               }
             }}

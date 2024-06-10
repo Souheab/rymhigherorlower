@@ -25,7 +25,6 @@ export default class Album {
     this.coverImageUrl = coverImageUrl;
   }
 
-  
   static createAlbumFromJSON(json: any) {
     const artists = json.artists;
     const artistString = artists.join(" & ");

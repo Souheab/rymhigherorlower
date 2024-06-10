@@ -1,8 +1,11 @@
 import Album from "./data/Album";
 
-const apiEndpoint = "http://localhost:3084/randomalbumpair"
+const apiEndpoint = "http://localhost:3084/randomalbumpair";
 
-export async function fetchAlbumPair(start?: number, end?: number): Promise<Array<Album>> {
+export async function fetchAlbumPair(
+  start?: number,
+  end?: number,
+): Promise<Array<Album>> {
   if (start === undefined) {
     start = 1;
   }
