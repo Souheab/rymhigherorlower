@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { fetchAlbumPair } from "../api";
 import AlbumSelectButton from "./AlbumSelectButton";
 import Album from "../data/Album";
+import AlbumInfo from "./AlbumInfo";
 interface GamePageProps {
   onGameEnd: (score: number) => void;
 }
@@ -28,11 +29,11 @@ export default function GamePage(props: GamePageProps) {
   return (
     <div className="flex flex-col h-screen items-center">
       <div className="text-4xl mt-8">Score: {score}</div>
-      <div className="mt-[25%]">
+      <div className="mt-[15%]">
         <div>
           Click on the album you think is rated higher on rateyourmusic.com?
         </div>
-        <div className="flex items-center justify-center gap-16 justify-self-center mt-8">
+        <div className="grid grid-cols-2 gap-16 justify-self-center mt-8">
           <AlbumSelectButton album={firstAlbum}
             onClick={() => {
               if (firstAlbum && secondAlbum) {
@@ -51,12 +52,15 @@ export default function GamePage(props: GamePageProps) {
                 if (secondAlbum.score >= firstAlbum.score) {
                   setScore(score + 1);
                 }
-              } else {
-                props.onGameEnd(score);
-                setScore(0);
+                else {
+                  props.onGameEnd(score);
+                  setScore(0);
+                }
               }
             }}
           />
+          <AlbumInfo album={firstAlbum} />
+          <AlbumInfo album={secondAlbum} />
         </div>
       </div>
     </div>

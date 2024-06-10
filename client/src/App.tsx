@@ -6,14 +6,21 @@ import GamePage from "./ui/GamePage";
 function App() {
   const [isGameStarted, setIsGameStarted] = useState(false);
 
-  return isGameStarted ? (
-    <GamePage
-      onGameEnd={(score) => {
-        setIsGameStarted(false);
-      }}
-    />
-  ) : (
-    <StartPage onStart={() => setIsGameStarted(true)} />
+  return (
+    <>
+      <header className="text-black text-3xl font-bold text-center p-4">RYM Higher Or Lower</header>
+      {
+        isGameStarted ? (
+          <GamePage
+            onGameEnd={(_) => {
+              setIsGameStarted(false);
+            }}
+          />
+        ) : (
+          <StartPage onStart={() => setIsGameStarted(true)} />
+        )
+      }
+    </>
   );
 }
 

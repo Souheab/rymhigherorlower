@@ -26,7 +26,7 @@ export default function AlbumSelectButton(props: AlbumSelectButtonProps) {
       src={imageUrl}
       width={250}
       height={250}
-      onClick={() => props.onClick()}
+      onClick={props.onClick}
     ></img>
   );
 }
