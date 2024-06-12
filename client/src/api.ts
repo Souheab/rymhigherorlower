@@ -1,6 +1,7 @@
 import Album from "./data/Album";
 
-const apiEndpoint = "http://localhost:3084/randomalbumpair";
+const apiURL = "http://rymholapi.souheab.com";
+const apiEndpoint = `${apiURL}/randomalbumpair`;
 
 export async function fetchAlbumPair(
   start?: number,
