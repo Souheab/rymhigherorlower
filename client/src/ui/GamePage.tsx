@@ -29,20 +29,23 @@ export default function GamePage(props: GamePageProps) {
   }
 
   useEffect(() => {
-    console.log("Num images loaded: ", numImagesLoaded);
     if (numImagesLoaded >= totalImages) {
       setImagesLoaded(true);
-      console.log("Images loaded");
     } else {
       setImagesLoaded(false);
-      console.log("Images unloaded");
+      const timer = setTimeout(() => {
+        if (numImagesLoaded < totalImages) {
+          setImagesLoaded(true);
+        }
+      }, 5000);
+
+      return () => clearTimeout(timer);
     }
   }, [numImagesLoaded]);
 
   useEffect(() => {
     fetchAlbumPair()
       .then((albumPair) => {
-        console.log("Fetched albums: ", albumPair);
         setFirstAlbum(albumPair[0]);
         setSecondAlbum(albumPair[1]);
       })
@@ -97,7 +100,7 @@ export default function GamePage(props: GamePageProps) {
               setNumImagesLoaded(0);
             }}
           />
-          {imagesLoaded ? 
+          {imagesLoaded ?
             <>
               <AlbumInfo album={firstAlbum} />
               <AlbumInfo album={secondAlbum} />
