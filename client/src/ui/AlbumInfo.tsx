@@ -1,7 +1,7 @@
 import Album from "../data/Album";
 
 interface AlbumInfoProps {
-  album?: Album;
+  album: Album | undefined | null;
 }
 
 export default function AlbumInfo(props: AlbumInfoProps) {

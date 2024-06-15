@@ -3,17 +3,41 @@ import { fetchAlbumPair } from "../api";
 import AlbumSelectButton from "./AlbumSelectButton";
 import Album from "../data/Album";
 import AlbumInfo from "./AlbumInfo";
+import LoadingSpinner from "./LoadingSpinner";
 interface GamePageProps {
   onGameEnd: () => void;
   score: number;
   onScoreChange: (score: number) => void;
 }
 
+const totalImages = 2;
+
 export default function GamePage(props: GamePageProps) {
-  const [firstAlbum, setFirstAlbum] = useState(undefined as Album | undefined);
+
+
+  const [firstAlbum, setFirstAlbum] = useState(null as Album | undefined | null);
   const [secondAlbum, setSecondAlbum] = useState(
-    undefined as Album | undefined,
+    null as Album | undefined | null,
   );
+  const [numImagesLoaded, setNumImagesLoaded] = useState(0);
+  const [imagesLoaded, setImagesLoaded] = useState(false);
+
+
+  function onGameEnd() {
+    props.onGameEnd();
+    setNumImagesLoaded(0);
+  }
+
+  useEffect(() => {
+    console.log("Num images loaded: ", numImagesLoaded);
+    if (numImagesLoaded >= totalImages) {
+      setImagesLoaded(true);
+      console.log("Images loaded");
+    } else {
+      setImagesLoaded(false);
+      console.log("Images unloaded");
+    }
+  }, [numImagesLoaded]);
 
   useEffect(() => {
     fetchAlbumPair()
@@ -24,12 +48,18 @@ export default function GamePage(props: GamePageProps) {
       })
       .catch((error) => {
         console.error("Error fetching albums: ", error);
+        setFirstAlbum(undefined);
+        setSecondAlbum(undefined);
       });
   }, [props.score]);
 
+  const onLoaded = () => {
+    setNumImagesLoaded(+numImagesLoaded + 1);
+  };
+
   return (
     <div className="flex flex-col h-screen items-center">
-      <div className="text-4xl mt-8">Score: {props.score}</div>
+      <div className="text-4xl mt-16">Score: {props.score}</div>
       <div className="mt-[15%]">
         <div>
           Click on the album you think is rated higher on rateyourmusic.com
@@ -37,31 +67,45 @@ export default function GamePage(props: GamePageProps) {
         <div className="grid grid-cols-2 gap-16 justify-self-center mt-8">
           <AlbumSelectButton
             album={firstAlbum}
+            onLoaded={onLoaded}
+            loaded={imagesLoaded}
             onClick={() => {
               if (firstAlbum && secondAlbum) {
                 if (firstAlbum.score >= secondAlbum.score) {
                   props.onScoreChange(props.score + 1);
                 } else {
-                  props.onGameEnd();
+                  onGameEnd();
                 }
               }
+
+              setNumImagesLoaded(0);
             }}
           />
           <AlbumSelectButton
             album={secondAlbum}
+            onLoaded={onLoaded}
+            loaded={imagesLoaded}
             onClick={() => {
               if (firstAlbum && secondAlbum) {
                 if (secondAlbum.score >= firstAlbum.score) {
                   props.onScoreChange(props.score + 1);
                 } else {
-                  props.onGameEnd();
+                  onGameEnd();
                 }
               }
+
+              setNumImagesLoaded(0);
             }}
           />
-          <AlbumInfo album={firstAlbum} />
-          <AlbumInfo album={secondAlbum} />
+          {imagesLoaded ? 
+            <>
+              <AlbumInfo album={firstAlbum} />
+              <AlbumInfo album={secondAlbum} />
+            </>
+            : <></>
+          }
         </div>
+        {!imagesLoaded && <LoadingSpinner />}
       </div>
     </div>
   );

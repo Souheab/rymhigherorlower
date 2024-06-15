@@ -1,8 +1,10 @@
 import Album from "../data/Album";
 
 interface AlbumSelectButtonProps {
-  album?: Album;
+  album: Album | undefined | null;
   onClick: () => void;
+  onLoaded: () => void;
+  loaded: boolean;
 }
 
 export default function AlbumSelectButton(props: AlbumSelectButtonProps) {
@@ -11,6 +13,12 @@ export default function AlbumSelectButton(props: AlbumSelectButtonProps) {
       <div>
         <p>Can't fetch album</p>
       </div>
+    );
+  }
+
+  if (props.album === null) {
+    return (
+      <></>
     );
   }
 
@@ -27,6 +35,8 @@ export default function AlbumSelectButton(props: AlbumSelectButtonProps) {
       width={250}
       height={250}
       onClick={props.onClick}
+      style={{ display: props.loaded ? "block" : "none"}}
+      onLoad={props.onLoaded}
     ></img>
   );
 }
